@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AbacoQR" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#960018</item>
+        <item name="colorPrimaryVariant">#7a0013</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorAccent">#960018</item>
+    </style>
+
+    <style name="Theme.AbacoQR" parent="Base.Theme.AbacoQR" />
+
+    <!-- TEMA PARA LA PANTALLA DE INICIO (SPLASH) -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Fondo de la pantalla de carga -->
+        <item name="windowSplashScreenBackground">#960018</item>
+        <!-- Tu icono personalizado (usa el mismo que generaste en el paso 1) -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- Tema al que cambiará cuando la app termine de cargar -->
+        <item name="postSplashScreenTheme">@style/Theme.AbacoQR</item>
+    </style>
+</resources>
