@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual de Usuario: AbacoQR</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { color: #2a5d9f; }
+        ul, ol { margin-left: 20px; }
+        .section { margin-bottom: 30px; }
+        .step { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>📖 Manual de Usuario: AbacoQR</h1>
+    <p>¡Bienvenido a AbacoQR! Esta aplicación está diseñada para gestionar, verificar y auditar el inventario de equipos tecnológicos de forma rápida mediante el escaneo de códigos QR y la sincronización con archivos CSV.</p>
+    <div class="section">
+        <h2>1. Primeros Pasos: Acceso y Carga de Datos</h2>
+        <ul>
+            <li><span class="step">Inicio de Sesión:</span> Al abrir la app, introduce tus credenciales de técnico. La aplicación recordará tu sesión durante 24 horas para que no tengas que estar introduciendo la contraseña continuamente mientras trabajas.</li>
+            <li><span class="step">Cargar Inventario (CSV):</span> Antes de empezar a escanear, necesitas una base de datos. Pulsa el botón "Cargar CSV" y selecciona el archivo de inventario de tu móvil. La app leerá miles de registros en segundos y te mostrará un resumen de los equipos (Total, Activos y Descartados).</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>2. El Corazón de la App: Escanear y Verificar</h2>
+        <ol>
+            <li>Pulsa "Escanear QR". La cámara se abrirá en formato vertical.</li>
+            <li>Apunta al código QR (o código de barras) que contiene el Número de Serie del equipo.</li>
+            <li>Si el equipo existe en el inventario, se abrirá una ficha con sus datos (Centro, Planta, Aula, Estado, etc.).</li>
+            <li>¿Todo está correcto? Pulsa el botón "Verificación Rápida". Esto registrará que has auditado el equipo hoy con tu usuario.</li>
+            <li>¿Hay cambios? Modifica el estado (Activo, Inoperativo, STOCK, Préstamo), el aula o añade notas en "Observaciones" y pulsa "Guardar".</li>
+        </ol>
+    </div>
+    <div class="section">
+        <h2>3. Gestión Manual y Búsqueda</h2>
+        <ul>
+            <li><span class="step">Búsqueda Avanzada:</span> Pulsa en "Ir a Búsqueda". Puedes buscar equipos por su Nº Serie, Artículo, Propietario, etc. La lista se actualizará en tiempo real mientras escribes. Si tocas un equipo de la lista, se abrirá su ficha para editarlo.</li>
+            <li><span class="step">Añadir Equipo Nuevo:</span> Usa el botón flotante "+" (esquina inferior). Rellena los datos básicos (Nº Serie y Artículo son obligatorios) y el equipo se añadirá a la base de datos marcándose automáticamente como una "ALTA".</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>4. Generación de Etiquetas QR (PDF)</h2>
+        <ol>
+            <li>Pulsa "Generar PDF".</li>
+            <li>Aparecerá un menú de filtros. Puedes elegir generar QRs solo para los equipos de un "Centro" concreto, de un "Aula", o los que estén en estado "STOCK".</li>
+            <li>Pulsa "Generar" y selecciona dónde guardar el archivo. La app creará automáticamente un documento PDF en tamaño A4 con las etiquetas (QR + Número de Serie + Marca/Modelo) listas para la impresora.</li>
+        </ol>
+    </div>
+    <div class="section">
+        <h2>5. Historial y Guardado Final (¡Muy Importante!)</h2>
+        <ul>
+            <li><span class="step">Revisar el Historial:</span> Pulsa "Ver Historial" en cualquier momento para ver un ticket con todos los equipos que has modificado en la sesión actual.</li>
+            <li><span class="step">Guardar Cambios:</span> Pulsa "Guardar Cambios" para sobrescribir el archivo CSV original que cargaste por la mañana. ¡Así mantendrás el archivo fuente actualizado!</li>
+            <li><span class="step">Exportar / Compartir:</span> Si prefieres no tocar el archivo original o quieres enviar tu trabajo a un coordinador, pulsa este botón. La app creará un CSV nuevo con la fecha y hora exacta y te abrirá el menú de Android para enviarlo por WhatsApp, Email, Drive, etc.</li>
+        </ul>
+    </div>
+</body>
+</html>
+

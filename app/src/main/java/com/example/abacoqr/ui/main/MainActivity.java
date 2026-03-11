@@ -118,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnGuardarFinal).setOnClickListener(v -> viewModel.guardarCambios());
         findViewById(R.id.btnExportarCompartir).setOnClickListener(v -> viewModel.exportarParaCompartir(this::compartirArchivo));
         findViewById(R.id.fab_add_dispositivo).setOnClickListener(v -> new AddDispositivoDialog().show(getSupportFragmentManager(), "add_dialog"));
+        findViewById(R.id.btnManualUsuario).setOnClickListener(v -> {
+            new com.example.abacoqr.ui.dialogs.ManualDialog().show(getSupportFragmentManager(), "manual_dialog");
+        });
     }
 
     private void observeViewModel() {
