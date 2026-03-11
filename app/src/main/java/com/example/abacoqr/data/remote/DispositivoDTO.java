@@ -1,4 +1,4 @@
-package com.example.abacoqr.model;
+package com.example.abacoqr.data.remote;
 
 import java.io.Serializable;
 

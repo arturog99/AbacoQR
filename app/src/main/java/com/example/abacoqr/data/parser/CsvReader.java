@@ -18,35 +18,21 @@ import java.util.Map;
 
 /**
  * Clase de utilidad encargada de leer y procesar archivos CSV.
- * Implementa una lectura eficiente mediante streaming para soportar archivos de gran tamaño (100k+ registros)
- * sin agotar la memoria RAM del dispositivo.
+ * Implementa una lectura eficiente mediante streaming y un parser seguro
+ * para soportar comas dentro de los campos de texto.
  */
 public class CsvReader {
 
-    /** Almacena los nombres de las columnas del último archivo CSV procesado */
     private static List<String> header;
-    
-    /** Mapa que vincula el nombre de una columna con su índice (posición) en el archivo */
     private static Map<String, Integer> lastHeaderMap;
-    
+
     private static final String PREFS_NAME = "InventarioPrefs";
     private static final String KEY_HEADER_MAP = "last_header_map";
 
-    /**
-     * Interfaz de callback para procesar cada dispositivo de forma individual
-     * a medida que se lee cada línea del archivo CSV.
-     */
     public interface OnDeviceParsedListener {
         void onDeviceParsed(Dispositivo dispositivo);
     }
 
-    /**
-     * Lee un archivo CSV desde una URI y procesa cada fila línea a línea.
-     * 
-     * @param context Contexto de la aplicación para acceder al ContentResolver.
-     * @param uri URI del archivo CSV seleccionado por el usuario.
-     * @param listener Callback que se ejecuta cada vez que se parsea un dispositivo con éxito.
-     */
     public static void leerYProcesar(Context context, Uri uri, OnDeviceParsedListener listener) {
         header = new ArrayList<>();
         Map<String, Integer> headerMap = new HashMap<>();
@@ -58,20 +44,18 @@ public class CsvReader {
             String headerLine = reader.readLine();
             if (headerLine == null) return;
 
-            // Eliminar el carácter invisible BOM si existe (común en archivos de Excel)
             if (headerLine.startsWith("\uFEFF")) {
                 headerLine = headerLine.substring(1);
             }
 
-            String[] rawHeaders = headerLine.split(",");
+            // CORRECCIÓN: Usamos el parser seguro en lugar de split(",")
+            List<String> rawHeaders = parsearLineaCsv(headerLine);
             boolean esCabeceraReal = false;
 
-            // Identificar la posición de cada columna clave basándose en su nombre
-            for (int i = 0; i < rawHeaders.length; i++) {
-                String cleanHeader = rawHeaders[i].trim();
+            for (int i = 0; i < rawHeaders.size(); i++) {
+                String cleanHeader = rawHeaders.get(i).trim();
                 header.add(cleanHeader);
-                
-                // Si encontramos palabras clave, confirmamos que es una línea de cabecera
+
                 if (cleanHeader.equalsIgnoreCase("Nº Serie") || cleanHeader.equalsIgnoreCase("Estado") || cleanHeader.equalsIgnoreCase("Artículo")) {
                     esCabeceraReal = true;
                 }
@@ -91,26 +75,19 @@ public class CsvReader {
                 else if (cleanHeader.equalsIgnoreCase("Propietario")) headerMap.put("Propietario", i);
                 else if (cleanHeader.equalsIgnoreCase("Verificado CAU")) headerMap.put("Verificado CAU", i);
             }
-            
+
             lastHeaderMap = headerMap;
-            // Guardar el mapa de forma persistente para futuros inicios de la app
             guardarHeaderMapEnPrefs(context, headerMap);
 
-            // Si la primera línea no era cabecera sino datos, la procesamos como el primer registro
             if (!esCabeceraReal) {
-                List<String> firstRowData = new ArrayList<>();
-                for (String col : rawHeaders) firstRowData.add(col.trim());
-                listener.onDeviceParsed(new Dispositivo(firstRowData, headerMap));
+                listener.onDeviceParsed(new Dispositivo(rawHeaders, headerMap));
             }
 
             // LEER EL RESTO DE FILAS (Procesamiento por streaming)
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",", -1);
-                List<String> cleanRowData = new ArrayList<>();
-                for (String col : columns) {
-                    cleanRowData.add(col.trim());
-                }
+                // CORRECCIÓN: Usamos el parser seguro para evitar que las comas en el texto rompan las columnas
+                List<String> cleanRowData = parsearLineaCsv(line);
                 listener.onDeviceParsed(new Dispositivo(cleanRowData, headerMap));
             }
         } catch (Exception e) {
@@ -119,21 +96,40 @@ public class CsvReader {
     }
 
     /**
-     * Guarda el mapa de cabeceras en SharedPreferences.
-     * Esto permite que la app sepa interpretar los datos de Room tras un reinicio.
+     * Nuevo método: Lee una línea CSV respetando las comillas dobles.
+     * Si encuentra comas dentro de unas comillas, NO las corta.
      */
+    private static List<String> parsearLineaCsv(String line) {
+        List<String> result = new ArrayList<>();
+        StringBuilder currentToken = new StringBuilder();
+        boolean inQuotes = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+
+            if (c == '\"') {
+                inQuotes = !inQuotes; // Entramos o salimos de una zona protegida por comillas
+            } else if (c == ',' && !inQuotes) {
+                // Solo cortamos si hay una coma Y NO estamos dentro de unas comillas
+                result.add(currentToken.toString().trim());
+                currentToken.setLength(0);
+            } else {
+                currentToken.append(c);
+            }
+        }
+        // Añadimos la última columna
+        result.add(currentToken.toString().trim());
+        return result;
+    }
+
     private static void guardarHeaderMapEnPrefs(Context context, Map<String, Integer> map) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String json = new Gson().toJson(map);
         prefs.edit().putString(KEY_HEADER_MAP, json).apply();
     }
 
-    /**
-     * Recupera el mapa de cabeceras guardado anteriormente.
-     * Se debe llamar al arrancar la aplicación.
-     */
     public static void cargarHeaderMapDesdePrefs(Context context) {
-        if (lastHeaderMap != null) return; 
+        if (lastHeaderMap != null) return;
 
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String json = prefs.getString(KEY_HEADER_MAP, null);
@@ -143,13 +139,7 @@ public class CsvReader {
         }
     }
 
-    /**
-     * Devuelve los nombres de las columnas del archivo original.
-     */
     public static List<String> getHeader() { return header; }
 
-    /**
-     * Devuelve el mapa de índices de las columnas.
-     */
     public static Map<String, Integer> getHeaderMap() { return lastHeaderMap; }
 }

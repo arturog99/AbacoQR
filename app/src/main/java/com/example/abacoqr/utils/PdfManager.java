@@ -16,25 +16,16 @@ import java.util.List;
 
 /**
  * Clase de utilidad encargada de la generación técnica de documentos PDF.
- * Gestiona la creación de Bitmaps de códigos QR y su posicionamiento en un lienzo (Canvas)
- * para crear hojas de etiquetas listas para imprimir con paginación automática.
+ * Optimizada para no saturar la memoria RAM con Bitmaps.
  */
 public class PdfManager {
 
-    /**
-     * Genera una imagen Bitmap que contiene un código QR a partir de un texto.
-     * 
-     * @param texto El contenido que se codificará en el QR (generalmente el Número de Serie).
-     * @return Un Bitmap con el código QR generado o null si ocurre un error.
-     */
     private static Bitmap generarQR(String texto) {
         try {
-            // Configuramos la codificación del QR con formato ZXing
             BitMatrix bitMatrix = new MultiFormatWriter().encode(texto, BarcodeFormat.QR_CODE, 200, 200);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
-            
-            // Creamos el Bitmap en formato ARGB_8888 para mayor calidad de impresión
+
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
@@ -48,57 +39,53 @@ public class PdfManager {
         }
     }
 
-    /**
-     * Crea un documento PDF con etiquetas QR organizadas en cuadrícula.
-     * Implementa lógica de paginación automática: cuando una página se llena, se crea una nueva.
-     * 
-     * @param inventario Lista de dispositivos ya filtrados que se deben imprimir.
-     * @param titulo Título o identificador del proceso de generación.
-     * @param outputStream Flujo de salida donde se escribirá el archivo PDF físicamente.
-     */
     public static void crearPdfEtiquetas(List<Dispositivo> inventario, String titulo, OutputStream outputStream) {
         if (inventario == null || inventario.isEmpty()) return;
 
         PdfDocument document = new PdfDocument();
-        // Definimos el tamaño de página A4 estándar (595x842 puntos)
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
+        int pageNumber = 1;
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, pageNumber).create();
         PdfDocument.Page page = document.startPage(pageInfo);
         Canvas canvas = page.getCanvas();
 
-        // Configuración del estilo de texto (Fuente, Color, Suavizado)
         Paint textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(12f);
         textPaint.setAntiAlias(true);
 
-        // Coordenadas iniciales para la primera etiqueta
         int x = 50, y = 50;
 
-        for (Dispositivo d : inventario) {
-            // Generamos el QR único para este dispositivo
+        for (int i = 0; i < inventario.size(); i++) {
+            Dispositivo d = inventario.get(i);
             Bitmap qrBitmap = generarQR(d.getNumeroSerie());
 
             if (qrBitmap != null) {
-                // Dibujamos el QR y la información de texto acompañante
                 canvas.drawBitmap(qrBitmap, x, y, null);
+
+                // LIBERAMOS RAM INMEDIATAMENTE: vital para PDFs largos
+                qrBitmap.recycle();
+
                 canvas.drawText("N/S: " + d.getNumeroSerie(), x + 5, y + 215, textPaint);
-                
-                // Formateamos la descripción (Marca - Modelo) acortándola si es necesario
-                String desc = d.getMarca() + " - " + d.getModelo();
+
+                // Protegemos contra nulos
+                String marca = d.getMarca() != null ? d.getMarca() : "";
+                String modelo = d.getModelo() != null ? d.getModelo() : "";
+                String desc = marca + " - " + modelo;
+
                 if (desc.length() > 30) desc = desc.substring(0, 27) + "...";
                 canvas.drawText(desc, x + 5, y + 230, textPaint);
 
-                // Lógica de cuadrícula: nos movemos a la derecha o saltamos de fila
                 x += 250;
                 if (x > 300) {
                     x = 50;
                     y += 270;
                 }
-                
-                // Lógica de Paginación: si llegamos al límite vertical, saltamos de página
-                if (y > 700) {
+
+                // Paginación: Solo creamos página nueva si AÚN QUEDAN elementos por dibujar
+                if (y > 700 && i < inventario.size() - 1) {
                     document.finishPage(page);
-                    pageInfo = new PdfDocument.PageInfo.Builder(595, 842, document.getPages().size() + 1).create();
+                    pageNumber++;
+                    pageInfo = new PdfDocument.PageInfo.Builder(595, 842, pageNumber).create();
                     page = document.startPage(pageInfo);
                     canvas = page.getCanvas();
                     x = 50; y = 50;
@@ -106,8 +93,9 @@ public class PdfManager {
             }
         }
 
-        // Finalizamos el documento y lo volcamos al archivo
+        // Cerramos la última página activa
         document.finishPage(page);
+
         try {
             document.writeTo(outputStream);
         } catch (Exception e) {

@@ -42,6 +42,7 @@ dependencies {
     
     // Room
     implementation(libs.room.runtime)
+    implementation(libs.firebase.crashlytics.buildtools)
     annotationProcessor(libs.room.compiler)
 
     // Splash Screen API

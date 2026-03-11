@@ -23,7 +23,7 @@
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- PANEL DE BÚSQUEDA MEJORADO -->
+    <!-- PANEL DE BÚSQUEDA AUTOMÁTICA -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,14 +77,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/btn_search_activity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Buscar"
-                app:backgroundTint="#960018" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -111,7 +103,7 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:scrollbarSize="8dp"
-            android:scrollbarStyle="insideInset"
+            android:scrollbarStyle="outsideOverlay"
             android:fadeScrollbars="false"
             android:fastScrollEnabled="true"
             app:fastScrollVerticalThumbDrawable="@drawable/scrollbar_thumb"

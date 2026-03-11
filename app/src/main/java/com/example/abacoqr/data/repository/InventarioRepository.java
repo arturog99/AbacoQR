@@ -51,19 +51,10 @@ public class InventarioRepository {
                 final int[] posicion = {0};
 
                 CsvReader.leerYProcesar(context, uri, d -> {
-                    // Creación de la entidad con los 16 parámetros exactos de DispositivoEntity
                     DispositivoEntity entity = new DispositivoEntity(
-                        d.getNumeroSerie(), 
-                        d.getEstado(), 
-                        d.getArticulo(), 
-                        d.getMarca(),
-                        d.getModelo(), 
-                        d.getUbicacion(), 
-                        d.getSubsede(), 
-                        d.getPabellon(),
-                        d.getPlanta(), 
-                        d.getEspacio(), 
-                        d.getObservaciones(),
+                        d.getNumeroSerie(), d.getEstado(), d.getArticulo(), d.getMarca(),
+                        d.getModelo(), d.getUbicacion(), d.getSubsede(), d.getPabellon(),
+                        d.getPlanta(), d.getEspacio(), d.getObservaciones(),
                         d.getUsuario() != null ? d.getUsuario() : "",
                         d.getPropietario(),
                         d.getVerificadoCau() != null ? d.getVerificadoCau() : "",
@@ -146,9 +137,22 @@ public class InventarioRepository {
 
     private boolean TextUtilsIsEmpty(String str) { return str == null || str.trim().isEmpty(); }
 
+    /**
+     * MEJORA: Realiza un UPDATE real en SQL para equipos existentes.
+     */
     public void actualizarDispositivo(DispositivoEntity entity, Callback<Void> callback) {
         executor.execute(() -> {
-            dao.insertar(entity);
+            dao.actualizar(entity); // ¡CORREGIDO! Usa @Update
+            callback.onComplete(null);
+        });
+    }
+
+    /**
+     * Inserta un equipo totalmente nuevo.
+     */
+    public void insertarNuevo(DispositivoEntity entity, Callback<Void> callback) {
+        executor.execute(() -> {
+            dao.insertar(entity); // Usa @Insert IGNORE
             callback.onComplete(null);
         });
     }
