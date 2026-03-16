@@ -48,10 +48,14 @@ dependencies {
     // Splash Screen API
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+    // Biometric Authentication
+    implementation("androidx.biometric:biometric:1.1.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.zxing:core:3.5.4")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.code.gson:gson:2.10.1")
+
 }

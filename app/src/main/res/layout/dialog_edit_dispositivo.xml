@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FAF4F4">
+    android:background="?android:colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,10 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginBottom="16dp"
-            android:text="✅ MARCAR COMO VERIFICADO"
-            android:textColor="#FFFFFF"
+            android:text="MARCAR COMO VERIFICADO"
+            android:textColor="@android:color/white"
             android:textStyle="bold"
-            app:backgroundTint="#2E7D32"
+            app:backgroundTint="?colorPrimary"
             app:cornerRadius="8dp"
             app:icon="@android:drawable/checkbox_on_background"
             app:iconGravity="textStart" />
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             app:cardElevation="2dp"
             app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardBackgroundColor="?colorSurface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="UBICACIÓN"
-                    android:textColor="#960018"
+                    android:textColor="?colorPrimary"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp"/>
@@ -53,8 +53,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Centro (Propietario)"
-                    app:boxStrokeColor="#960018"
-                    app:hintTextColor="#960018"
+                    app:boxStrokeColor="?colorPrimary"
+                    app:hintTextColor="?colorPrimary"
                     android:layout_marginBottom="8dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_edit_centro"
@@ -68,8 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Subsede"
-                    app:boxStrokeColor="#960018"
-                    app:hintTextColor="#960018"
+                    app:boxStrokeColor="?colorPrimary"
+                    app:hintTextColor="?colorPrimary"
                     android:layout_marginBottom="8dp">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_edit_subsede"
@@ -89,8 +89,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="Pabellón"
-                        app:boxStrokeColor="#960018"
-                        app:hintTextColor="#960018"
+                        app:boxStrokeColor="?colorPrimary"
+                        app:hintTextColor="?colorPrimary"
                         android:layout_marginEnd="4dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_edit_pabellon"
@@ -104,8 +104,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="Planta"
-                        app:boxStrokeColor="#960018"
-                        app:hintTextColor="#960018"
+                        app:boxStrokeColor="?colorPrimary"
+                        app:hintTextColor="?colorPrimary"
                         android:layout_marginStart="4dp">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_edit_planta"
@@ -121,8 +121,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:hint="Aula (Espacio)"
-                    app:boxStrokeColor="#960018"
-                    app:hintTextColor="#960018">
+                    app:boxStrokeColor="?colorPrimary"
+                    app:hintTextColor="?colorPrimary">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_edit_aula"
                         android:layout_width="match_parent"
@@ -140,7 +140,7 @@
             android:layout_marginTop="12dp"
             app:cardElevation="2dp"
             app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardBackgroundColor="?colorSurface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="DATOS DEL EQUIPO"
-                    android:textColor="#960018"
+                    android:textColor="?colorPrimary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -162,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="4dp"
-                    android:textColor="#424242"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="15sp" />
 
             </LinearLayout>
@@ -175,7 +175,7 @@
             android:layout_marginTop="12dp"
             app:cardElevation="2dp"
             app:cardCornerRadius="12dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardBackgroundColor="?colorSurface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -187,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ESTADO Y OBSERVACIONES"
-                    android:textColor="#960018"
+                    android:textColor="?colorPrimary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -197,7 +197,7 @@
                     android:layout_marginTop="12dp"
                     android:text="Estado actual:"
                     android:textSize="12sp"
-                    android:textColor="#757575" />
+                    android:textColor="?android:textColorSecondary" />
 
                 <Spinner
                     android:id="@+id/spinner_estado_dialogo"
@@ -209,7 +209,7 @@
                 <View 
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#960018"
+                    android:background="?colorPrimary"
                     android:layout_marginBottom="8dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -219,14 +219,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:hint="Observaciones"
-                    app:boxStrokeColor="#960018"
-                    app:hintTextColor="#960018">
+                    app:boxStrokeColor="?colorPrimary"
+                    app:hintTextColor="?colorPrimary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_observaciones"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#212121"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="15sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 

@@ -1,8 +1,9 @@
 package com.example.abacoqr.ui.dialogs;
 
 import android.app.Dialog;
-import android.graphics.Color;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
+import android.util.TypedValue;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,10 @@ public class FiltrosQrDialog extends DialogFragment {
 
         dialog.setOnShowListener(di -> {
             if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FAF4F4")));
+                // Usar color de fondo del tema
+                TypedValue typedValue = new TypedValue();
+                requireContext().getTheme().resolveAttribute(android.R.attr.colorBackground, typedValue, true);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(typedValue.data));
             }
         });
 

@@ -74,8 +74,13 @@ public class SearchResultsActivity extends AppCompatActivity {
         loadingIndicator = findViewById(R.id.search_loading_indicator);
         tvSummary = findViewById(R.id.tv_search_summary);
 
-        spinnerSearchField.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, opcionesBusqueda));
-        spinnerVerif.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, opcionesVerif));
+        ArrayAdapter<String> adapterSearchField = new ArrayAdapter<>(this, R.layout.spinner_item, opcionesBusqueda);
+        adapterSearchField.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerSearchField.setAdapter(adapterSearchField);
+        
+        ArrayAdapter<String> adapterVerif = new ArrayAdapter<>(this, R.layout.spinner_item, opcionesVerif);
+        adapterVerif.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerVerif.setAdapter(adapterVerif);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view_search_results);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

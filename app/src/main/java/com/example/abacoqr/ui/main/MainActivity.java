@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,8 +21,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.abacoqr.R;
+import com.example.abacoqr.auth.AuthenticationManager;
 import com.example.abacoqr.model.Dispositivo;
 import com.example.abacoqr.model.HistorialCambio;
+import com.example.abacoqr.ui.auth.LoginActivity;
 import com.example.abacoqr.ui.dialogs.AddDispositivoDialog;
 import com.example.abacoqr.ui.dialogs.EditDispositivoDialog;
 import com.example.abacoqr.ui.dialogs.FiltrosQrDialog;
@@ -85,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         viewModel = new ViewModelProvider(this).get(InventarioViewModel.class);
+        viewModel.verificarDatosExistente();
         String user = getIntent().getStringExtra("USERNAME");
         if (user != null) viewModel.setUsuario(user);
 
@@ -115,7 +121,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnVerHistorial).setOnClickListener(v -> mostrarHistorial());
         findViewById(R.id.btnIrABusqueda).setOnClickListener(v -> searchResultsLauncher.launch(new Intent(this, SearchResultsActivity.class)));
         findViewById(R.id.btnGenerarPdf).setOnClickListener(v -> new FiltrosQrDialog().show(getSupportFragmentManager(), "filtros_dialog"));
-        findViewById(R.id.btnGuardarFinal).setOnClickListener(v -> viewModel.guardarCambios());
+        findViewById(R.id.btnGuardarFinal).setOnClickListener(v -> {
+            if (viewModel.tieneCsvGuardado()) {
+                // Intentar guardar directamente - si hay error de permisos, el sistema lo manejará
+                viewModel.guardarCambios();
+            } else {
+                Toast.makeText(this, "Por favor, carga un archivo CSV primero.", Toast.LENGTH_SHORT).show();
+            }
+        });
         findViewById(R.id.btnExportarCompartir).setOnClickListener(v -> viewModel.exportarParaCompartir(this::compartirArchivo));
         findViewById(R.id.fab_add_dispositivo).setOnClickListener(v -> new AddDispositivoDialog().show(getSupportFragmentManager(), "add_dialog"));
         findViewById(R.id.btnManualUsuario).setOnClickListener(v -> {
@@ -124,6 +137,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void observeViewModel() {
+        // NUEVO: Observer para mensajes del ViewModel
+        viewModel.getMensaje().observe(this, msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                
+                // NUEVO: Detectar mensaje de permisos expirados y ofrecer re-selección
+                if (msg.contains("permisos del archivo expiraron") || 
+                    msg.contains("archivo CSV ya no es accesible") ||
+                    msg.contains("Error al guardar: permission denial")) {
+                    
+                    new Handler().postDelayed(() -> {
+                        new AlertDialog.Builder(this)
+                            .setTitle("Re-seleccionar Archivo CSV")
+                            .setMessage("Los permisos del archivo CSV han expirado. ¿Deseas seleccionar el archivo nuevamente para poder guardar los cambios?")
+                            .setPositiveButton("Seleccionar Archivo", (dialog, which) -> {
+                                selectorDeArchivos.launch(new String[]{"text/csv", "text/comma-separated-values"});
+                            })
+                            .setNegativeButton("Cancelar", null)
+                            .show();
+                    }, 1000);
+                }
+            }
+        });
+
         final TextView tvTotal = findViewById(R.id.tvTotal);
         final TextView tvActivos = findViewById(R.id.tvActivos);
         final TextView tvInoperativos = findViewById(R.id.tvInoperativos);
@@ -194,5 +231,47 @@ public class MainActivity extends AppCompatActivity {
         if (hist == null || hist.isEmpty()) { Toast.makeText(this, "Vacío.", Toast.LENGTH_SHORT).show(); return; }
         String f = hist.stream().map(HistorialCambio::toString).collect(Collectors.joining("\n\n"));
         new AlertDialog.Builder(this).setTitle("Historial de Sesión").setMessage(f).setPositiveButton("Cerrar", null).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        
+        if (id == R.id.action_logout) {
+            mostrarDialogoLogout();
+            return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void mostrarDialogoLogout() {
+        new AlertDialog.Builder(this)
+            .setTitle("Cerrar Sesión")
+            .setMessage("¿Estás seguro de que quieres cerrar la sesión?")
+            .setPositiveButton("Cerrar Sesión", (dialog, which) -> {
+                // Usar AuthenticationManager para cerrar sesión
+                AuthenticationManager.logout(this);
+                
+                // Deshabilitar biometría si estaba activa
+                com.example.abacoqr.utils.BiometricAuthHelper.disableBiometricLogin(this);
+                
+                // NUEVO: Limpiar referencia al CSV
+                viewModel.limpiarCsvUri();
+                
+                // Ir a LoginActivity
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            })
+            .setNegativeButton("Cancelar", null)
+            .show();
     }
 }

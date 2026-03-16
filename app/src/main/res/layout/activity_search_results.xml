@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FAF4F4"
+    android:background="?android:colorBackground"
     android:fitsSystemWindows="true"
     tools:context=".ui.search.SearchResultsActivity">
 
@@ -29,7 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="?colorSurface">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,41 +42,43 @@
                 android:layout_height="wrap_content"
                 android:text="Buscar por:"
                 android:textSize="11sp"
-                android:textColor="#960018"
+                android:textColor="?colorPrimary"
                 android:textStyle="bold" />
             
             <Spinner
                 android:id="@+id/spinner_search_field_activity"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                style="@style/Theme.AbacoQR.Spinner" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Estado de verificación:"
                 android:textSize="11sp"
-                android:textColor="#960018"
+                android:textColor="?colorPrimary"
                 android:textStyle="bold" />
 
             <Spinner
                 android:id="@+id/spinner_search_verif_activity"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                style="@style/Theme.AbacoQR.Spinner" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Theme.AbacoQR.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Escribe tu búsqueda..."
-                app:boxStrokeColor="#960018"
-                app:hintTextColor="#960018">
+                app:boxStrokeColor="?colorPrimary"
+                app:hintTextColor="?colorPrimary">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_search_query_activity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/black" />
+                    android:textColor="?android:textColorPrimary" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -87,7 +90,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingBottom="8dp"
-        android:textColor="#757575"
+        android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         android:textStyle="italic"
         android:visibility="gone" />
@@ -119,7 +122,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:indeterminateTint="#960018" />
+            android:indeterminateTint="?colorPrimary" />
     </FrameLayout>
 
 </LinearLayout>

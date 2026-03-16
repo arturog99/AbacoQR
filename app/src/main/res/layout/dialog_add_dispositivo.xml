@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FAF4F4">
+    android:background="?android:colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="AÑADIR NUEVO ACTIVO"
-            android:textColor="#960018"
+            android:textColor="?colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
@@ -25,18 +25,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DATOS OBLIGATORIOS"
-            android:textColor="#757575"
+            android:textColor="?android:textColorSecondary"
             android:textSize="11sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nº Serie *"
-            app:boxStrokeColor="#960018"
-            app:hintTextColor="#960018"
+            app:boxStrokeColor="?colorPrimary"
+            app:hintTextColor="?colorPrimary"
             android:layout_marginBottom="8dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_add_serie"
@@ -45,12 +45,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Artículo *"
-            app:boxStrokeColor="#960018"
-            app:hintTextColor="#960018"
+            app:boxStrokeColor="?colorPrimary"
+            app:hintTextColor="?colorPrimary"
             android:layout_marginBottom="8dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_add_articulo"
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="OTROS DATOS (OPCIONALES)"
-            android:textColor="#757575"
+            android:textColor="?android:textColorSecondary"
             android:textSize="11sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Theme.AbacoQR.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Theme.AbacoQR.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -113,7 +113,7 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Marca"
@@ -125,7 +125,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Modelo"
@@ -137,7 +137,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Propietario / Centro"
@@ -149,7 +149,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Subsede"
@@ -161,7 +161,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Pabellón"
@@ -178,7 +178,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="8dp">
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Theme.AbacoQR.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -190,7 +190,7 @@
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Theme.AbacoQR.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -204,7 +204,7 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Theme.AbacoQR.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Observaciones"

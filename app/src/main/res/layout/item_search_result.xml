@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="?colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="DATOS DEL EQUIPO"
             android:textStyle="bold"
-            android:textColor="#960018"
+            android:textColor="?colorPrimary"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
         <TextView
@@ -34,14 +35,14 @@
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#DDDDDD" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="UBICACIÓN"
             android:textStyle="bold"
-            android:textColor="#960018"
+            android:textColor="?colorPrimary"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
         <TextView
@@ -57,7 +58,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#DDDDDD" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <TextView
             android:id="@+id/tv_item_estado_val"

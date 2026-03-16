@@ -80,6 +80,22 @@ public class InventarioViewModel extends AndroidViewModel {
     public LiveData<Dispositivo> getDispositivoEncontrado() { return dispositivoEncontrado; }
     public LiveData<List<Dispositivo>> getResultadosPdf() { return resultadosPdf; }
 
+    /**
+     * Limpia la referencia al CSV (útil para logout o cambio de archivo)
+     */
+    public void limpiarCsvUri() {
+        this.csvUri = null;
+        SharedPreferences prefs = getApplication().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().remove(KEY_CSV_URI).apply();
+    }
+
+    /**
+     * Verifica si hay un CSV guardado pero puede que no sea accesible
+     */
+    public boolean tieneCsvGuardado() {
+        return csvUri != null;
+    }
+
     private String getFechaInicioMesActual() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -89,6 +105,11 @@ public class InventarioViewModel extends AndroidViewModel {
     public void cargarCsv(Uri uri) {
         estaCargando.setValue(true);
         this.csvUri = uri;
+        
+        // NUEVO: Guardar URI en SharedPreferences para persistencia
+        SharedPreferences prefs = getApplication().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().putString(KEY_CSV_URI, uri.toString()).apply();
+        
         repository.cargarCsv(getApplication(), uri, new InventarioRepository.Callback<Void>() {
             @Override public void onComplete(Void result) {
                 hayDatosCargados.postValue(true);
@@ -234,27 +255,68 @@ public class InventarioViewModel extends AndroidViewModel {
     }
 
     public void guardarCambios() {
-        if (csvUri == null) return;
+        if (csvUri == null) {
+            mensaje.postValue("Error: No hay un archivo CSV seleccionado. Por favor, carga el CSV nuevamente.");
+            return;
+        }
+        
+        // NUEVO: Logging para debug
+        Log.d("InventarioViewModel", "Intentando guardar en URI: " + csvUri.toString());
+        
         estaCargando.postValue(true);
         repository.obtenerTodoParaCsv(new InventarioRepository.Callback<List<DispositivoEntity>>() {
             @Override public void onComplete(List<DispositivoEntity> todasEntidades) {
                 executor.execute(() -> {
-                    try (OutputStream os = getApplication().getContentResolver().openOutputStream(csvUri, "wt");
-                         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(Objects.requireNonNull(os)))) {
-                        List<String> header = CsvReader.getHeader();
-                        if (header != null) { writer.write(joinCsvLine(header)); writer.newLine(); }
-                        for (DispositivoEntity e : todasEntidades) { writer.write(joinCsvLine(e.fullRowData)); writer.newLine(); }
-                        writer.flush();
-                        mainHandler.post(() -> {
-                            estaCargando.setValue(false);
-                            mensaje.setValue("¡CSV guardado con éxito!");
-                        });
+                    try {
+                        // NUEVO: Verificar si el URI es accesible antes de intentar escribir
+                        try (OutputStream os = getApplication().getContentResolver().openOutputStream(csvUri, "wt")) {
+                            if (os == null) {
+                                throw new Exception("No se puede acceder al archivo CSV. El URI puede haber expirado.");
+                            }
+                            
+                            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
+                                List<String> header = CsvReader.getHeader();
+                                if (header != null) { writer.write(joinCsvLine(header)); writer.newLine(); }
+                                for (DispositivoEntity e : todasEntidades) { writer.write(joinCsvLine(e.fullRowData)); writer.newLine(); }
+                                writer.flush();
+                                
+                                mainHandler.post(() -> {
+                                    estaCargando.setValue(false);
+                                    mensaje.setValue("¡CSV guardado con éxito!");
+                                    Log.d("InventarioViewModel", "CSV guardado exitosamente");
+                                });
+                            }
+                        }
                     } catch (Exception ex) {
-                        mainHandler.post(() -> { estaCargando.setValue(false); mensaje.setValue("Error al guardar."); });
+                        Log.e("InventarioViewModel", "Error guardando CSV: " + ex.getMessage(), ex);
+                        mainHandler.post(() -> { 
+                            estaCargando.setValue(false); 
+                            
+                            // Manejo específico para permisos denegados
+                            if (ex.getMessage() != null && (
+                                ex.getMessage().contains("permiso") || 
+                                ex.getMessage().contains("denegado") ||
+                                ex.getMessage().contains("permission") ||
+                                ex.getMessage().contains("denied") ||
+                                ex.getMessage().contains("denial") ||
+                                ex.getMessage().contains("acceder") ||
+                                ex.getMessage().contains("expirado") ||
+                                ex.getMessage().contains("access")
+                            )) {
+                                mensaje.setValue("⚠️ Los permisos del archivo expiraron. Por favor, selecciona el CSV nuevamente.");
+                                // Limpiar URI inválido
+                                limpiarCsvUri();
+                            } else {
+                                mensaje.setValue("Error al guardar: " + ex.getMessage());
+                            }
+                        });
                     }
                 });
             }
-            @Override public void onError(Exception e) { estaCargando.postValue(false); }
+            @Override public void onError(Exception e) { 
+                estaCargando.postValue(false); 
+                mensaje.postValue("Error al obtener datos: " + e.getMessage());
+            }
         });
     }
 
@@ -284,6 +346,20 @@ public class InventarioViewModel extends AndroidViewModel {
                 });
             }
             @Override public void onError(Exception e) { estaCargando.postValue(false); }
+        });
+    }
+
+    public void verificarDatosExistente() {
+        repository.verificarDatos(new InventarioRepository.Callback<Integer>() {
+            @Override
+            public void onComplete(Integer count) {
+                if (count > 0) {
+                    hayDatosCargados.postValue(true);
+                    actualizarEstadisticas("Activo");
+                }
+            }
+            @Override
+            public void onError(Exception e) { }
         });
     }
 

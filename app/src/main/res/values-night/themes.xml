@@ -1,7 +1,95 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AbacoQR" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- Tema oscuro personalizado para AbacoQR -->
+    <style name="Base.Theme.AbacoQR" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Colores primarios (mismo rojo pero más suave para modo oscuro) -->
+        <item name="colorPrimary">#B71C1C</item>
+        <item name="colorPrimaryVariant">#8B0000</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorAccent">#B71C1C</item>
+        
+        <!-- Colores de fondo y superficie para tema oscuro -->
+        <item name="android:colorBackground">#121212</item>
+        <item name="colorSurface">#1E1E1E</item>
+        <item name="colorOnSurface">#E0E0E0</item>
+        
+        <!-- Colores para texto en tema oscuro -->
+        <item name="android:textColorPrimary">#E0E0E0</item>
+        <item name="android:textColorSecondary">#B0B0B0</item>
+        <item name="android:textColorPrimaryInverse">#121212</item>
+        <item name="android:textColorSecondaryInverse">#424242</item>
+        
+        <!-- Forzar colores en spinners y controles -->
+        <item name="android:editTextColor">#E0E0E0</item>
+        <item name="android:textColorLink">#B71C1C</item>
+        <item name="android:textColorHighlight">#80B71C1C</item>
+        
+        <!-- Estilo para spinners -->
+        <item name="spinnerStyle">@style/Theme.AbacoQR.Spinner</item>
+        
+        <!-- Colores para cards y componentes -->
+        <item name="cardBackgroundColor">#2C2C2C</item>
+        <item name="colorError">#CF6679</item>
+        
+        <!-- TextInputLayout colors -->
+        <item name="editTextColor">#E0E0E0</item>
+        
+        <!-- CheckBox colors -->
+        <item name="colorControlNormal">#757575</item>
+        <item name="colorControlActivated">#B71C1C</item>
+        <item name="colorControlHighlight">#B71C1C</item>
+        
+        <!-- Status bar y navigation bar -->
+        <item name="android:statusBarColor">#121212</item>
+        <item name="android:navigationBarColor">#1E1E1E</item>
     </style>
+
+    <!-- Estilo personalizado para TextInputLayout en tema oscuro -->
+    <style name="Theme.AbacoQR.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">#2C2C2C</item>
+        <item name="boxStrokeColor">#B71C1C</item>
+        <item name="hintTextColor">#B0B0B0</item>
+        <item name="android:textColorHint">#B0B0B0</item>
+        <item name="passwordToggleTint">#B0B0B0</item>
+    </style>
+
+    <!-- Estilo para botones primarios en tema oscuro -->
+    <style name="Theme.AbacoQR.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="backgroundTint">#B71C1C</item>
+    </style>
+
+    <!-- Estilo para botones secundarios en tema oscuro -->
+    <style name="Theme.AbacoQR.Button.Secondary" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="backgroundTint">#424242</item>
+    </style>
+
+    <!-- Estilo para Spinner en tema oscuro -->
+    <style name="Theme.AbacoQR.Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">#E0E0E0</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:backgroundTint">#2C2C2C</item>
+        <item name="android:popupBackground">#2C2C2C</item>
+    </style>
+
+    <!-- TextAppearance para spinner en tema oscuro -->
+    <style name="TextAppearance.AbacoQR.Spinner" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">#E0E0E0</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Estilo para dropdown items en tema oscuro -->
+    <style name="Theme.AbacoQR.SpinnerDropdownItem" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">#E0E0E0</item>
+        <item name="android:background">#2C2C2C</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Estilo global para forzar texto blanco en spinners -->
+    <style name="AppTheme" parent="Base.Theme.AbacoQR">
+        <item name="android:textColorPrimary">#E0E0E0</item>
+        <item name="android:textColorSecondary">#B0B0B0</item>
+    </style>
+
+    <style name="Theme.AbacoQR" parent="Base.Theme.AbacoQR" />
 </resources>
